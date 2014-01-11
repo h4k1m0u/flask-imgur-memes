@@ -1,17 +1,34 @@
 #!/usr/bin/python
 
+import sqlite3
 import requests
 import os
 # import datetime
-from flask import Flask, render_template, redirect, url_for, flash
+from flask import Flask, render_template, redirect, url_for, flash, g
 
 # config
-CLIENT_ID = '636ac93d409f0d2' 
+CLIENT_ID = 'imgur-app-clientid' 
 SECRET_KEY = os.urandom(24)
+DATABASE = 'memes.db'
+PATH = 'static'
 
 # create app
 app = Flask(__name__)
 app.config.from_object(__name__)
+
+@app.before_request
+def before_request():
+    """ Connect to sqlite db before each http request
+    """
+    g.db = sqlite3.connect(app.config['DATABASE'])
+
+@app.teardown_request
+def teardown_request(exception):
+    """ Disconnect from db when app is closed or exception
+    """
+    db = getattr(g, 'db', None)
+    if db is not None:
+        db.close()
 
 @app.route('/')
 def top_memes():
@@ -25,7 +42,7 @@ def top_memes():
 
 @app.route('/save/<img_id>')
 def save_meme(img_id):
-    """ Save image by its imgur's id
+    """ Save image by its imgur's id to disk & db
         Args:
             img_id(str): image id in imgur
     """
@@ -38,25 +55,36 @@ def save_meme(img_id):
     if r.status_code == 200:
         img = r.json()['data']
 
-        # retreive img from link & save it on disk
+        # retreive img from link
         r = requests.get(img['link'])
-        with open('memes/%s' % img['id'], 'w') as img_file:
+        img_path = '%s/%s' % (app.config['PATH'], img['id'])
+
+        #  save it on disk
+        with open(img_path, 'w') as img_file:
             for chunk in r.iter_content(1024):
                 img_file.write(chunk)
-        flash('Image has been saved to memes/%s' % img['id'])
+
+        # save it to sqlite db
+        g.db.execute(
+            'insert into memes (id, title, path) values (?, ?, ?)',
+            [img['id'], img['title'], img_path]
+        )
+        g.db.commit()
+
+        flash('Image has been saved to %s' % img_path)
 
     return redirect(url_for('saved_memes'))
 
 @app.route('/favs')
 def saved_memes():
-    """ Get favourite memes saved on disk
-        from folder /memes
+    """ Get favourite memes saved on db & disk
+        from folder /static
     """
-    favs_memes = ''
-    # get meme image
-    # r = requests.get()
+    # get favorite memes from db
+    cur = g.db.execute('select id, title from memes')
+    fav_memes = [{'id':row[0], 'link':row[1]} for row in cur.fetchall()]
 
-    return render_template('memes.html', memes=favs_memes)
+    return render_template('memes.html', memes=fav_memes)
 
 # run app
 if __name__ == '__main__':

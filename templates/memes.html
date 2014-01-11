@@ -5,9 +5,13 @@
         {% if memes %}
             {% for meme in memes %}
                 <div class="meme">
-                    <a href="{{ url_for('save_meme', img_id=meme.id) }}">
+                    {% if request.path == '/' %}
                         <img src="{{ meme.link }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
-                    </a>
+                        <a href="{{ url_for('save_meme', img_id=meme.id) }}">
+                        </a>
+                    {% else %}
+                        <img src="{{ url_for('static', filename=meme.id) }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
+                    {% endif %}
                 </div>
             {% endfor %}
         {% else %}
