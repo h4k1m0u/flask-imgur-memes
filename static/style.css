@@ -1,0 +1,14 @@
+body {background-color:#df6545;}
+.container {width:630px;margin:0 auto;}
+h1 {font-size:24px;font-weight:normal;}
+header {height:40px;background-color:#292a2d;}
+header nav {line-height:40px;}
+header nav ul {overflow:hidden;list-style:none;margin:0;padding:0;}
+header nav ul li {float:left;padding:0 5px;}
+header nav ul li:hover, header nav ul li.active {background-color:#46c0c5;}
+header nav ul li a {color:white;font-weight:bold;text-decoration:none;}
+main {min-height:100px;padding-top:10px;background-color:#f9f9f9;}
+h2 {padding-left:10px;color:#c1583b;font-size:14px;}
+.no-meme {line-height:100px;color:#a2a9b2;font-weight:bold;text-align:center;}
+.meme {margin:5px;}
+.meme img {width:200px;}

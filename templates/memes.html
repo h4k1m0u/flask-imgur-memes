@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+{% block body %}
+    <h2>Memes</h2>
+    <div class="memes{% if memes %} js-masonry{% endif %}">
+        {% if memes %}
+            {% for meme in memes %}
+                <div class="meme">
+                    <a href="{{ url_for('save_meme', img_id=meme.id) }}">
+                        <img src="{{ meme.link }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
+                    </a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-meme">
+                No memes or connection lost.
+            </p>
+        {% endif %}
+    </div>
+{% endblock %}
