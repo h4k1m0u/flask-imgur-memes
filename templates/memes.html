@@ -6,11 +6,11 @@
             {% for meme in memes %}
                 <div class="meme">
                     {% if request.path == '/' %}
-                        <img src="{{ meme.link }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
+                        <img class="lazy" data-original="{{ meme.link }}" src="{{ url_for('static', filename='preloader.gif') }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
                         <a href="{{ url_for('save_meme', img_id=meme.id) }}">
                         </a>
                     {% else %}
-                        <img src="{{ url_for('static', filename=meme.id) }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
+                        <img class="lazy" data-original="{{ url_for('static', filename=meme.id) }}"  src="{{ url_for('static', filename='preloader.gif') }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
                     {% endif %}
                 </div>
             {% endfor %}

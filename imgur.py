@@ -7,7 +7,7 @@ import os
 from flask import Flask, render_template, redirect, url_for, flash, g
 
 # config
-CLIENT_ID = 'imgur-app-clientid' 
+CLIENT_ID = '636ac93d409f0d2' 
 SECRET_KEY = os.urandom(24)
 DATABASE = 'memes.db'
 PATH = 'static'
