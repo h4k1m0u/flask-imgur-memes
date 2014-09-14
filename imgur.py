@@ -7,7 +7,7 @@ import os
 from flask import Flask, render_template, redirect, url_for, flash, g
 
 # config
-CLIENT_ID = '636ac93d409f0d2' 
+CLIENT_ID = '636ac93d409f0d2'
 SECRET_KEY = os.urandom(24)
 DATABASE = 'memes.db'
 PATH = 'static'
@@ -16,11 +16,13 @@ PATH = 'static'
 app = Flask(__name__)
 app.config.from_object(__name__)
 
+
 @app.before_request
 def before_request():
     """ Connect to sqlite db before each http request
     """
     g.db = sqlite3.connect(app.config['DATABASE'])
+
 
 @app.teardown_request
 def teardown_request(exception):
@@ -30,15 +32,17 @@ def teardown_request(exception):
     if db is not None:
         db.close()
 
+
 @app.route('/')
 def top_memes():
-    """ Home page to show first-page top memes 
+    """ Home page to show first-page top memes
         retreived from https://imgur.com/top
     """
     # get memes from imgur api
-    r = requests.get('https://api.imgur.com/3/gallery/g/memes', headers={'Authorization':'Client-ID %s' % app.config['CLIENT_ID']})
+    r = requests.get('https://api.imgur.com/3/gallery/g/memes', headers={'Authorization': 'Client-ID %s' % app.config['CLIENT_ID']})
     memes = r.json()['data'] if r.status_code == 200 else {}
     return render_template('memes.html', memes=memes)
+
 
 @app.route('/save/<img_id>')
 def save_meme(img_id):
@@ -49,7 +53,7 @@ def save_meme(img_id):
     # get image link from imgur api
     r = requests.get(
         'https://api.imgur.com/3/gallery/image/%s' % img_id,
-        headers={'Authorization':'Client-ID %s' % app.config['CLIENT_ID']}
+        headers={'Authorization': 'Client-ID %s' % app.config['CLIENT_ID']}
     )
 
     if r.status_code == 200:
@@ -75,6 +79,7 @@ def save_meme(img_id):
 
     return redirect(url_for('saved_memes'))
 
+
 @app.route('/favs')
 def saved_memes():
     """ Get favourite memes saved on db & disk
@@ -82,7 +87,7 @@ def saved_memes():
     """
     # get favorite memes from db
     cur = g.db.execute('select id, title from memes')
-    fav_memes = [{'id':row[0], 'link':row[1]} for row in cur.fetchall()]
+    fav_memes = [{'id': row[0], 'link':row[1]} for row in cur.fetchall()]
 
     return render_template('memes.html', memes=fav_memes)
 
