@@ -7,12 +7,12 @@
                 <div class="meme">
                     {% if request.path == '/' %}
                         {# Top memes #}
-                        <img class="lazy" src="{{ meme.link[::-1].replace('.', '.s', 1)[::-1] }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
-                        <a href="{{ url_for('save_meme', img_id=meme.id) }}">
+                        <img src="{{ meme.link[::-1].replace('.', '.s', 1)[::-1] }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
+                        <a class="fancybox" href="{{ meme.link }}">
                         </a>
                     {% else %}
                         {# Saved memes #}
-                        <img class="lazy" src="{{ url_for('static', filename=meme.id) }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
+                        <img src="{{ url_for('static', filename=meme.id) }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
                     {% endif %}
                 </div>
             {% endfor %}

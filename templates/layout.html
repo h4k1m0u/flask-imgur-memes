@@ -1,13 +1,21 @@
 <!doctype html>
 <title>Imgur Memes</title>
 <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" />
+<link href="{{ url_for('static', filename='fancybox/jquery.fancybox.css') }}" rel="stylesheet" />
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='masonry.pkgd.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='fancybox/jquery.fancybox.js') }}"></script>
 <script type="text/javascript">
     // init memes grid
     var memes = document.querySelector('.memes')
     var masonry = new Masonry(memes, {
         columnWidth: 200,
         itemSelector: '.meme'
+    });
+
+    // init fancybox
+    $(function() {
+        $('.fancybox').fancybox();
     });
 </script>
 <div class="container">
