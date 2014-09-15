@@ -4,17 +4,19 @@
     <div class="memes{% if memes %} js-masonry{% endif %}">
         {% if memes %}
             {% for meme in memes %}
-                <div class="meme">
-                    {% if request.path == '/' %}
-                        {# Top memes #}
-                        <img src="{{ meme.link[::-1].replace('.', '.s', 1)[::-1] }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
-                        <a class="fancybox" href="{{ meme.link }}">
-                        </a>
-                    {% else %}
-                        {# Saved memes #}
-                        <img src="{{ url_for('static', filename=meme.id) }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
-                    {% endif %}
-                </div>
+                {% if not meme.is_album  %}
+                    <div class="meme">
+                        {% if request.path == '/' %}
+                            {# Top memes #}
+                            <img src="{{ meme.link[::-1].replace('.', '.s', 1)[::-1] }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
+                            <a class="fancybox" href="{{ meme.link }}">
+                            </a>
+                        {% else %}
+                            {# Saved memes #}
+                            <img src="{{ url_for('static', filename=meme.id) }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
+                        {% endif %}
+                    </div>
+                {% endif %}
             {% endfor %}
         {% else %}
             <p class="no-meme">
