@@ -13,7 +13,7 @@ main {min-height:100px;padding-top:10px;background-color:#f9f9f9;box-shadow:1px 
 h2 {padding-left:10px;color:#c1583b;font-size:14px;}
 .no-meme {line-height:100px;color:#a2a9b2;font-weight:bold;text-align:center;}
 .memes {overflow:hidden;}
-.meme {float:left;margin:5px;padding:3px;background-color:#ededed;box-shadow:0px 0px 2px 0px #999;}
+.meme {float:left;margin:5px;padding:3px;background-color:#E6E9ED;box-shadow:0px 0px 2px 0px #999;}
 .meme img {width:200px;}
 .meme a:hover img {opacity:0.75;}
 .save-image, .delete-image {text-align:center;}

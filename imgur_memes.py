@@ -109,9 +109,20 @@ def save_meme(img_id):
 
 @app.route('/delete/<img_id>')
 def delete_meme(img_id):
+    # get image path & thumb from sqlite db
+    cur = g.db.execute(
+        'select id, title, path, thumb from memes where id = ?',
+        [img_id]
+    )
+    img_id, img_title, img_path, img_thumb = cur.fetchone()
+
     # delete from disk
+    os.remove(img_path)
+    os.remove(img_thumb)
 
     # delete from sqlite db
+    g.db.execute('delete from memes where id = ?', [img_id])
+    g.db.commit()
 
     # show a flash msg
     flash('Image has been deleted')
