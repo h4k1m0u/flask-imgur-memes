@@ -9,7 +9,7 @@
                         {% if request.path == '/' %}
                             {# Top memes #}
                             <a class="fancybox" href="{{ meme.link }}">
-                                <img src="{{ meme.link[::-1].replace('.', '.s', 1)[::-1] }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
+                                <img src="{{ meme.link[::-1].replace('.', '.b', 1)[::-1] }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
                             </a>
                             <p class="save-image">
                                 <a href="{{ url_for('save_meme', img_id=meme.id) }}" alt="Save image" title="Save image">
@@ -18,14 +18,21 @@
                             </p>
                         {% else %}
                             {# Saved memes #}
-                            <img src="{{ url_for('static', filename=meme.id) }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
+                            <a class="fancybox" href="{{ meme.path }}">
+                                <img src="{{ meme.thumb }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
+                            </a>
+                            <p class="delete-image">
+                                <a href="{{ url_for('delete_meme', img_id=meme.id) }}" alt="Delete image" title="Delete image">
+                                    Delete image
+                                </a>
+                            </p>
                         {% endif %}
                     </div>
                 {% endif %}
             {% endfor %}
         {% else %}
             <p class="no-meme">
-                No memes or connection lost.
+                No memes.
             </p>
         {% endif %}
     </div>

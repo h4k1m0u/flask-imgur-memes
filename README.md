@@ -4,5 +4,11 @@
 * Saved images can be consulted later.
 
 ##Prequisite:
-Requests library (http://docs.python-requests.org).
-Sqlite3 library.
+* Python.
+* Flask.
+* Requests.
+* Sqlite3.
+
+##Note:
+Use `sqlite3 memes.db < schema.sql` to generate the sqlite database.
+Use `sqlite3 memes.db` to verify that the database has been created.

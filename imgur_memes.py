@@ -17,6 +17,34 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 
 
+def download_imgur_image(img_link, is_thumb=False):
+    """ Save on disk image downloaded from imgur or its thumbnail
+        Args:
+            img_link (str): link of the image to be downloaded
+            img_id (bool): whether to get the original image or its thumbnail
+        Returns:
+            img_path (str): path to the image downloaded
+    """
+    # get filename with extension from link
+    file_name = img_link[img_link.rfind('/') + 1:]
+
+    # retreive img thumbnail from link
+    if is_thumb:
+        img_link = img_link[::-1].replace('.', '.b', 1)[::-1]
+        file_name = file_name.replace('.', 'b.')
+
+    # retreive img from link
+    r = requests.get(img_link)
+    img_path = '%s/%s' % (app.config['PATH'], file_name)
+
+    # save img on disk
+    with open(img_path, 'w') as img_file:
+        for chunk in r.iter_content(1024):
+            img_file.write(chunk)
+
+    return img_path
+
+
 @app.before_request
 def before_request():
     """ Connect to sqlite db before each http request
@@ -39,7 +67,10 @@ def top_memes():
         retreived from https://imgur.com/top
     """
     # get memes from imgur api
-    r = requests.get('https://api.imgur.com/3/gallery/g/memes', headers={'Authorization': 'Client-ID %s' % app.config['CLIENT_ID']})
+    r = requests.get(
+        'https://api.imgur.com/3/gallery/g/memes',
+        headers={'Authorization': 'Client-ID %s' % app.config['CLIENT_ID']}
+    )
     memes = r.json()['data'] if r.status_code == 200 else {}
     return render_template('memes.html', memes=memes)
 
@@ -59,23 +90,31 @@ def save_meme(img_id):
     if r.status_code == 200:
         img = r.json()['data']
 
-        # retreive img from link
-        r = requests.get(img['link'])
-        img_path = '%s/%s' % (app.config['PATH'], img['id'])
-
-        #  save it on disk
-        with open(img_path, 'w') as img_file:
-            for chunk in r.iter_content(1024):
-                img_file.write(chunk)
+        # save img & thumb to disk
+        thumb_path = download_imgur_image(img['link'], True)
+        img_path = download_imgur_image(img['link'])
 
         # save it to sqlite db
         g.db.execute(
-            'insert into memes (id, title, path) values (?, ?, ?)',
-            [img['id'], img['title'], img_path]
+            'insert into memes (id, title, path, thumb) values (?, ?, ?, ?)',
+            [img['id'], img['title'], img_path, thumb_path]
         )
         g.db.commit()
 
+        # show a flash msg
         flash('Image has been saved to %s' % img_path)
+
+    return redirect(url_for('saved_memes'))
+
+
+@app.route('/delete/<img_id>')
+def delete_meme(img_id):
+    # delete from disk
+
+    # delete from sqlite db
+
+    # show a flash msg
+    flash('Image has been deleted')
 
     return redirect(url_for('saved_memes'))
 
@@ -86,8 +125,11 @@ def saved_memes():
         from folder /static
     """
     # get favorite memes from db
-    cur = g.db.execute('select id, title from memes')
-    fav_memes = [{'id': row[0], 'link':row[1]} for row in cur.fetchall()]
+    cur = g.db.execute('select id, title, path, thumb from memes')
+    fav_memes = [
+        {'id': row[0], 'title': row[1], 'path': row[2], 'thumb': row[3]}
+        for row in cur.fetchall()
+    ]
 
     return render_template('memes.html', memes=fav_memes)
 

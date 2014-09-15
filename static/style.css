@@ -4,7 +4,7 @@ h1 {font-size:24px;font-weight:normal;}
 header {background-color:#292a2d;}
 header nav {border:1px solid #fff;}
 header nav ul {overflow:hidden;list-style:none;margin:0;padding:0;}
-header nav ul li {float:left;padding:10px 5px;}
+header nav ul li {float:left;padding:10px;}
 header nav ul li:hover, header nav ul li.active {background-color:#46c0c5;}
 header nav ul li:last-child {border-left:1px solid #fff;}
 header nav ul li a {color:white;font-weight:bold;text-decoration:none;}
@@ -16,6 +16,6 @@ h2 {padding-left:10px;color:#c1583b;font-size:14px;}
 .meme {float:left;margin:5px;padding:3px;background-color:#ededed;box-shadow:0px 0px 2px 0px #999;}
 .meme img {width:200px;}
 .meme a:hover img {opacity:0.75;}
-.save-image {text-align:center;}
-.save-image a {color:#292A2D;font-weight:bold;text-decoration:none;}
-.save-image a:hover {color:#46C0C5;}
+.save-image, .delete-image {text-align:center;}
+.save-image a, .delete-image a {color:#292A2D;font-weight:bold;text-decoration:none;}
+.save-image a:hover, .delete-image a:hover {color:#46C0C5;}
