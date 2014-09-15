@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% block body %}
     <h2>Memes</h2>
-    <div class="memes{% if memes %} js-masonry{% endif %}">
+    <div class="memes">
         {% if memes %}
             {% for meme in memes %}
                 {% if not meme.is_album  %}
