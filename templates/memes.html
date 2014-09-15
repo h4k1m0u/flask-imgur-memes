@@ -8,9 +8,14 @@
                     <div class="meme">
                         {% if request.path == '/' %}
                             {# Top memes #}
-                            <img src="{{ meme.link[::-1].replace('.', '.s', 1)[::-1] }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
                             <a class="fancybox" href="{{ meme.link }}">
+                                <img src="{{ meme.link[::-1].replace('.', '.s', 1)[::-1] }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
                             </a>
+                            <p class="save-image">
+                                <a href="{{ url_for('save_meme', img_id=meme.id) }}" alt="Save image" title="Save image">
+                                    Save image
+                                </a>
+                            </p>
                         {% else %}
                             {# Saved memes #}
                             <img src="{{ url_for('static', filename=meme.id) }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
