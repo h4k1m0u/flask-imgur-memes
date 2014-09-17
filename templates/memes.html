@@ -1,41 +1,35 @@
-{% extends 'layout.html' %}
-{% block body %}
-    <h2>Memes</h2>
-    <div class="memes">
-        {% if memes %}
-            {% for meme in memes %}
-                {% if not meme.is_album  %}
-                    <div class="meme">
-                        {% if request.path == '/' %}
-                            {# Top memes #}
-                            <a class="fancybox" href="{{ meme.link }}">
-                                <img src="{{ meme.link[::-1].replace('.', '.b', 1)[::-1] }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
-                            </a>
-                            <p class="save-image">
-                                <a href="{{ url_for('save_meme', img_id=meme.id) }}" alt="Save image" title="Save image">
-                                    <img src="{{ url_for('static', filename='download-icon.png') }}" />
-                                    Save image
-                                </a>
-                            </p>
-                        {% else %}
-                            {# Saved memes #}
-                            <a class="fancybox" href="{{ meme.path }}">
-                                <img src="{{ meme.thumb }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
-                            </a>
-                            <p class="delete-image">
-                                <a href="{{ url_for('delete_meme', img_id=meme.id) }}" alt="Delete image" title="Delete image">
-                                    <img src="{{ url_for('static', filename='delete-icon.png') }}" />
-                                    Delete image
-                                </a>
-                            </p>
-                        {% endif %}
-                    </div>
+{% if memes and not memes.error %}
+    {% for meme in memes %}
+        {% if not meme.is_album  %}
+            <div class="meme">
+                {% if request.path.startswith('/save') %}
+                    {# Saved memes #}
+                    <a class="fancybox" href="{{ meme.path }}">
+                        <img src="{{ meme.thumb }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
+                    </a>
+                    <p class="delete-image">
+                        <a href="{{ url_for('delete_meme', img_id=meme.id) }}" alt="Delete image" title="Delete image">
+                            <img src="{{ url_for('static', filename='delete-icon.png') }}" />
+                            Delete image
+                        </a>
+                    </p>
+                {% else %}
+                    {# Top memes #}
+                    <a class="fancybox" href="{{ meme.link }}">
+                        <img src="{{ meme.link[::-1].replace('.', '.b', 1)[::-1] }}" alt="{{ meme.title }}" title="{{ meme.title }}" />
+                    </a>
+                    <p class="save-image">
+                        <a href="{{ url_for('save_meme', img_id=meme.id) }}" alt="Save image" title="Save image">
+                            <img src="{{ url_for('static', filename='download-icon.png') }}" />
+                            Save image
+                        </a>
+                    </p>
                 {% endif %}
-            {% endfor %}
-        {% else %}
-            <p class="no-meme">
-                No memes.
-            </p>
+            </div>
         {% endif %}
-    </div>
-{% endblock %}
+    {% endfor %}
+{% else %}
+    <p class="no-meme">
+        No memes.
+    </p>
+{% endif %}

@@ -3,8 +3,9 @@
 import sqlite3
 import requests
 import os
+import time
 # import datetime
-from flask import Flask, render_template, redirect, url_for, flash, g
+from flask import Flask, render_template, redirect, url_for, flash, g, jsonify
 
 # config
 CLIENT_ID = '636ac93d409f0d2'
@@ -51,6 +52,9 @@ def before_request():
     """
     g.db = sqlite3.connect(app.config['DATABASE'])
 
+    # profiling execution time
+    g.start = time.time()
+
 
 @app.teardown_request
 def teardown_request(exception):
@@ -60,19 +64,42 @@ def teardown_request(exception):
     if db is not None:
         db.close()
 
+    # profiling execution time
+    diff = time.time() - g.start
+    print 'Execution time %s' % diff
+
 
 @app.route('/')
 def top_memes():
-    """ Home page to show first-page top memes
-        retreived from https://imgur.com/top
+    """ Home page
+        Memes are retreived with ajax in get_memes()
+    """
+    return render_template('layout.html')
+
+
+@app.route('/<page>')
+def get_memes(page):
+    """ Get ajax loaded json memes in given page
+        Args:
+            page (int): page to be retreived
     """
     # get memes from imgur api
     r = requests.get(
-        'https://api.imgur.com/3/gallery/g/memes',
+        'https://api.imgur.com/3/g/memes/top/%s' % page,
         headers={'Authorization': 'Client-ID %s' % app.config['CLIENT_ID']}
     )
     memes = r.json()['data'] if r.status_code == 200 else {}
-    return render_template('memes.html', memes=memes)
+
+    # send json data to sub-template
+    content = render_template('memes.html', **{
+        'memes': memes
+    })
+
+    # return ajax response
+    return jsonify(
+        content=content,
+        nextPage=int(page) + 1
+    )
 
 
 @app.route('/save/<img_id>')
@@ -143,6 +170,7 @@ def saved_memes():
     ]
 
     return render_template('memes.html', memes=fav_memes)
+
 
 # run app
 if __name__ == '__main__':

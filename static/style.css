@@ -1,5 +1,6 @@
+.hidden {display:none !important;}
 body {background-color:#df6545;font-family:sans-serif;}
-.container {width:650px;margin:0 auto;}
+.container {width:660px;margin:0 auto;}
 h1 {font-size:24px;font-weight:normal;}
 header {background-color:#292a2d;}
 header nav {border:1px solid #fff;}
@@ -8,7 +9,7 @@ header nav ul li {float:left;padding:10px;}
 header nav ul li:hover, header nav ul li.active {background-color:#46c0c5;}
 header nav ul li:last-child {border-left:1px solid #fff;}
 header nav ul li a {color:white;font-weight:bold;text-decoration:none;}
-main {min-height:100px;padding-top:10px;background-color:#f9f9f9;box-shadow:1px 5px 5px 0 #292a2d;}
+main {padding:6px;background-color:#f9f9f9;box-shadow:1px 5px 5px 0 #292a2d;}
 .message {background-color:#E6E9ED;border:1px solid #EFF0F2;color:#79808A;font-size:12px;font-weight:bold;margin:5px;padding:5px;}
 h2 {padding-left:10px;color:#c1583b;font-size:14px;}
 .no-meme {line-height:100px;color:#a2a9b2;font-weight:bold;text-align:center;}
@@ -19,3 +20,4 @@ h2 {padding-left:10px;color:#c1583b;font-size:14px;}
 .save-image, .delete-image {text-align:center;}
 .save-image a, .delete-image a {color:#292A2D;font-weight:bold;text-decoration:none;}
 .save-image a:hover, .delete-image a:hover {color:#46C0C5;}
+.preloader {display:block;margin:0 auto;padding-bottom:10px;}
